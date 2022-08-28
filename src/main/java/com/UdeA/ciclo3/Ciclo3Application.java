@@ -19,7 +19,7 @@ public class Ciclo3Application {
 	@GetMapping("/test")
 	public String test (){
 		Empresa emp =new Empresa("Cocacola","Calle del hambre","321321321","8000000");
-		emp.setNombre("Solar Red");
+		emp.setNombre("Feliz Domingo");
 		return emp.getNombre();
 
 	}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Empresas - Ciclo3</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+    a{
+    color:white;
+    }
+    a:hover {
+    color: black;
+    text-decoration:none;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Lista de Empresas</h1>
+
+    <table class="table">
+
+        <tr> <!-- Indica una riga-->
+            <td>ID</td>
+            <td>Nombre</td>
+            <td>Dirección</td>
+            <td>Telefono</td>
+            <td>NIT</td>
+            <td>Editar</td>
+            <td>Eliminar</td>
+        </tr>
+        <tr th:each="empresa :${empList}">
+
+            <td th:text="${empresa.id}"></td>
+            <td th:text="${empresa.nombre}"></td>
+            <td th:text="${empresa.dirección}"></td>
+            <td th:text="${empresa.Telefono}"></td>
+            <td th:text="${empresa.NIT}"></td>
+            <td> <button type ="button" class= "btn btn-primary"><a th:href="@{/EditarEmpresa/{id}(id=${empresa.id})}">Editar</a></button></td>
+            <td> <button type ="button" class= "btn btn-info"><a th:href="@{/EliminarEmpresa/{id}(id=${empresa.id})}">Eliminar</a></button></td>
+        </tr>
+    </table>
+    <button type="button" class="btn btn-warning"><a th:href="@{/AgregarEmpresa}">Agregar Nueva Empresa</a></button>
+
+</div>
+
+</body>
+</html>

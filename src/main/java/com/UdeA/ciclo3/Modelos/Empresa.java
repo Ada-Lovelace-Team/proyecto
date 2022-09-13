@@ -11,7 +11,7 @@ public class Empresa {
     private String nombre;
     private String dirreccion;
     private String telefono;
-    private String NIF;
+    private String NIT;
 
     public Empresa() {
     }
@@ -20,7 +20,7 @@ public class Empresa {
         this.nombre = nombre;
         this.dirreccion = dirreccion;
         this.telefono = telefono;
-        this.NIF = NIF;
+        this.NIT = NIT;
     }
 
     public int getId() {
@@ -55,12 +55,12 @@ public class Empresa {
         this.telefono = telefono;
     }
 
-    public String getNIF() {
-        return NIF;
+    public String getNIT() {
+        return NIT;
     }
 
-    public void setNIF(String NIF) {
-        this.NIF = NIF;
+    public void setNIT(String NIT) {
+        this.NIT= NIT;
     }
 }
 

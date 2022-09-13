@@ -32,7 +32,7 @@
       <div class="form-group col-md-12">
         <label class="col-md-3" for="id">ID de la Empresa:</label>
         <div class="col-md-6">
-          <input type="hidden"th:field="*{id}" class="form-control" id="id" required="required"></div>
+          <input type="hidden"th:field="*{id}" class="form-control" id="id" required="required"readonly></div>
       </div>
     </div>
 
@@ -66,8 +66,23 @@
     <!--campo NIT de la empresa-->
     <div class="row">
       <div class="form-group col-md-12">
-        <label class="col-md-3" for="nombre">Nombre de la Empresa:</label>
+        <label class="col-md-3" for="NIT">NIT o RUT de la Empresa:</label>
         <div class="col-md-6">
-          <input type="text"th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
+          <input type="text"th:field="*{NIT}" class="form-control" id="NIT" required="required"></div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-2">
+        <button class="btn btn-success"> Actualizar Empresa</button>
+      </div>
+    </div>
+
+  </form>
+
+  <br>
+  <a href="javascript: history.go(-1)" class="btn btn-info" role="button"> Atrás</a>
+
+</div>
+</body>
+</html>

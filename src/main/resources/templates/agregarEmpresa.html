@@ -20,8 +20,6 @@
 </style>
 </head>
 <body>
-
-
 <div class="container">
     <h1>Agrege los datos de la nueva Empresa</h1>
     <br>
@@ -34,7 +32,6 @@
                     <input type="text"th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
             </div>
         </div>
-
         <!--campo dirección-->
         <div class="row">
             <div class="form-group col-md-12">
@@ -43,7 +40,6 @@
                     <input type="text"th:field="*{direccion}" class="form-control" id="direccion" required="required"></div>
             </div>
         </div>
-
         <!--campo telefono-->
         <div class="row">
             <div class="form-group col-md-12">
@@ -52,8 +48,6 @@
                     <input type="text"th:field="*{telefono}" class="form-control" id="telefono" required="required"></div>
             </div>
         </div>
-
-
         <!--campo NIT de la empresa-->
         <div class="row">
             <div class="form-group col-md-12">
@@ -62,19 +56,17 @@
                     <input type="text"th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
+        <!--Boton para enviar todo y ejecutar accion -->
+        <div class="row">
+            <div class="col-md-2">
+                <button class="btn btn-success">Crear Empresa</button>
+            </div>
+        </div>
     </form>
-
+    <br>
+    <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atrás</a>
 
 </div>
 </body>
 </html>
+

@@ -33,8 +33,12 @@ public class EmpleadoServicios {
 
     }
     // Guardar o actualizar
-    public Empleado saverOurdateEmpleado(Empleado empleado){
-        return empleadoRepository.save(empleado);
+    public boolean saveOrUpdateEmpleado(Empleado empleado){
+        Empleado emp=empleadoRepository.save(empleado);
+        if (empleadoRepository.findById(emp.getId())!=null){
+            return true;
+        }
+        return false;
 
     }
     //Metodo para eliminar registros

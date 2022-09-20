@@ -46,7 +46,7 @@
             <td> <button type ="button" class= "btn btn-primary"><a th:href="@{/EditarEmpresa/{id}(id=${empresa.id})}">Editar</a></button></td>
             <td> <button type ="button" class= "btn btn-info"><a th:href="@{/EliminarEmpresa/{id}(id=${empresa.id})}">Eliminar</a></button></td>
         </tr>
-    </brtable>
+    </table>
     <button type="button" class="btn btn-warning"><a th:href="@{/AgregarEmpresa}">Agregar Nueva Empresa</a></button>
 
 </div>
@@ -70,7 +70,8 @@
              "showDuration":"300",
              "showMethod":"fadeIn",
              "hideMethod":"fadeOut",
-    }
+
+        }
     }
 
 </script>

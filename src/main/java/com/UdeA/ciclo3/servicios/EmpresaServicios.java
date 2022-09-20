@@ -26,9 +26,16 @@ public class EmpresaServicios {
         return empresaRepository.findById(id).get();
     }
     //Metodo para guardar o actializar objetos de tipo empresa
-    public Empresa saveOrUpdateEmpresa (Empresa empresa){
-        return empresaRepository.save(empresa);
+   // public Empresa saveOrUpdateEmpresa (Empresa empresa){
+        //return empresaRepository.save(empresa);
 
+    //Metodo para guardar o actializar objetos de tipo empresa
+    public boolean saveOrUpdateEmpresa (Empresa empresa){
+        Empresa emp=empresaRepository.save(empresa);
+        if (empresaRepository.findById(emp.getId())!=null){
+            return true;
+        }
+        return false;
     }
     //Metodo que me permita eliminar una empresa
     public boolean deleteEmpresa (Integer id) {

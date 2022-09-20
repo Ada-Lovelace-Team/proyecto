@@ -3,18 +3,21 @@ package com.UdeA.ciclo3.controller;
 import com.UdeA.ciclo3.Modelos.Empleado;
 import com.UdeA.ciclo3.Modelos.Empresa;
 import com.UdeA.ciclo3.Modelos.MovimientoDinero;
+import com.UdeA.ciclo3.repo.MovimientosRepository;
 import com.UdeA.ciclo3.servicios.EmpleadoServicios;
 import com.UdeA.ciclo3.servicios.EmpresaServicios;
 import com.UdeA.ciclo3.servicios.MovimientosServicios;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@RestController
-
+@Controller
 public class controller {
     @Autowired
     EmpresaServicios empresaServicios;
@@ -23,122 +26,130 @@ public class controller {
     @Autowired
     MovimientosServicios movimientosServicios;
 
-    @GetMapping("/enterprises")
-    public List<Empresa> verEmpresas() {
-        return empresaServicios.getAllEmpresas();
-
+    @Autowired
+    MovimientosRepository movimientosRepository;
+    ///ETodo lo relacionado con la Empresa//
+    @GetMapping({"/","/verEmpresas"})
+    public String viewEmpresas(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<Empresa> ListaEmpresas=empresaServicios.getAllEmpresas();
+        model.addAttribute("empList",ListaEmpresas);
+        model.addAttribute("mensaje",mensaje);
+        return "verEmpresas";
     }
-
-    @PostMapping("/enterprises")
-    public Empresa guardarEmpresa(@RequestBody Empresa emp) {
-        return this.empresaServicios.saveOrUpdateEmpresa(emp);
-
-
+    @GetMapping ("/AgregarEmpresa")
+    public String nuevaEmpresa(Model model, @ModelAttribute("mensaje")String mensaje){
+        Empresa emp= new Empresa();
+        model.addAttribute("emp",emp);
+        model.addAttribute("mensaje", mensaje);
+        return "agregarEmpresa";
     }
-
-    @GetMapping(path = "enterprises/{id}")
-    public Empresa empresaPorID(@PathVariable("id") Integer id) {
-        return this.empresaServicios.getEmpresaById(id);
-    }
-
-    @PatchMapping("/enterprises/{id}")
-    public Empresa actualizarEmpresa(@PathVariable("id") Integer id, @RequestBody Empresa empresa) {
-        Empresa emp = empresaServicios.getEmpresaById(id);
-        emp.setNombre(empresa.getNombre());
-        emp.setDirreccion(empresa.getDirreccion());
-        emp.setTelefono(empresa.getTelefono());
-        emp.setNIT(empresa.getNIT());
-        return empresaServicios.saveOrUpdateEmpresa(emp);
-    }
-
-    @DeleteMapping(path = "enterprises/{id}") //Eliminar registro de la bd
-    public String DeleteEmpresa(@PathVariable("id") Integer id) {
-        boolean respuesta = this.empresaServicios.deleteEmpresa(id);
-        if (respuesta) {  //Si respuesta es true?
-            return "Se elimino la empresa con id" + id;
-        } else {
-            return "No se pudo eliminar la empresa con id" + id;
+    @PostMapping ("/GuardarEmpresa")
+    public String guardarEmpresa(Empresa emp, RedirectAttributes redirectAttributes){
+        if (empresaServicios.saveOrUpdateEmpresa(emp)==true){
+            redirectAttributes.addFlashAttribute("mensaje","saveOK");
+            return "redirect:/VerEmpresas";
         }
+        redirectAttributes.addFlashAttribute("mensaje","saveError");
+        return "redirect:/AgregarEmpresa";
     }
 
-    //Empleados
-    @GetMapping("/users")
-    public List<Empleado> verEmpleados(){
-        return empleadoServicios.getAllEmpleado();
+    @GetMapping("/EditarEmpresa/{id}")
+    public String editarEmpresa(Model model, @PathVariable Integer id, @ModelAttribute("mensaje")String mensaje){
+        Empresa emp=empresaServicios.getEmpresaById(id);
+        model.addAttribute("emp",emp);
+        model.addAttribute("mensaje", mensaje);
+        return "editarEmpresa";
     }
-
-    @PostMapping("/users") //Guardar un empleado nuevo
-    public Optional<Empleado> guardarEmpleado(@RequestBody Empleado empl){
-        return Optional.ofNullable(this.empleadoServicios.saverOurdateEmpleado(empl));
-    }
-    @GetMapping(path = "users/{id}")//Consultar empleado por ID
-    public Optional<Empleado> empleadoPorID(@PathVariable("id") Integer id){
-        return this.empleadoServicios.getEmpleadoById(id);
-    }
-    @GetMapping("/enterprises/{id}/users")
-    public ArrayList<Empleado>EmpleadoPorEmpresa(@PathVariable("id")Integer id){
-        return this.empleadoServicios.obtenerPorEmpresa(id);
-    }
-    @PatchMapping("/users/{id}")
-    public Empleado actualizarEmpleado(@PathVariable("id") Integer id, @RequestBody Empleado empleado){
-        Empleado empl=empleadoServicios.getEmpleadoById(id).get();
-        empl.setNombre(empleado.getNombre());
-        empl.setCorreo(empleado.getCorreo());
-        empl.setEmpresa(empleado.getEmpresa());
-        empl.setCargo(empleado.getCargo());
-        return empleadoServicios.saverOurdateEmpleado(empl);
-    }
-    @DeleteMapping("/users/{id}") //Metodo para eliminar empleados por id
-    public String DeleteEmpleado(@PathVariable("id") Integer id){
-        boolean respuesta=empleadoServicios.deleteEmpleado(id); //eliminamos usando el servicio de nuestro service
-        if (respuesta){ //si la respuesta booleana es true, si se eliminò
-            return "Se pudo eliminar correctamente el empleado con id "+id;
-        }//Si la respuesta booleana es false, no se eliminó
-        return "No se puedo eliminar correctamente el empleado con id "+id;
-    }
-    //MOVEMENTS
-
-    @GetMapping("/movements") //Consultar todos los movimientos
-    public List<MovimientoDinero> verMovimientos(){
-        return movimientosServicios.getAllMovimientos();
-    }
-
-    @PostMapping("/movements")
-    public MovimientoDinero guardarMovimiento(@RequestBody MovimientoDinero movimiento){
-        return movimientosServicios.saveOrUpdateMovimiento(movimiento);
-    }
-
-    @GetMapping("/movements/{id}") //Consultar movimiento por id
-    public MovimientoDinero movimientoPorId(@PathVariable("id") Integer id){
-        return movimientosServicios.getMovimientoById(id);
-    }
-
-    @PatchMapping("enterprises/{id}/movements")//Editar o actualizar un movimiento
-    public MovimientoDinero actualizarMovimiento(@PathVariable("id") Integer id, @RequestBody MovimientoDinero movimiento){
-        MovimientoDinero mov=movimientosServicios.getMovimientoById(id);
-        mov.setConcepto(movimiento.getConcepto());
-        mov.setMonto(movimiento.getMonto());
-        mov.setUsuario(movimiento.getUsuario());
-        return movimientosServicios.saveOrUpdateMovimiento(mov);
-    }
-    @DeleteMapping("enterprises/{id}/movements")
-    public String deleteMovimiento(@PathVariable("id") Integer id){
-        boolean respuesta= movimientosServicios.deleteMovimiento(id);
-        if (respuesta){
-            return "Se elimino correctamente el movimiento con id " +id;
+    @PostMapping("/ActualizarEmpresa")
+    public String updateEmpresa (@ModelAttribute("emp") Empresa emp,RedirectAttributes redirectAttributes){
+        if(empresaServicios.saveOrUpdateEmpresa(emp)){
+            redirectAttributes.addFlashAttribute("mensaje","updateOk");
+            return "redirect:/VerEmpresas";
         }
-        return "No se pudo eliminar el movimiento con id "+id;
+        redirectAttributes.addFlashAttribute("mensaje","updateError");
+        return "redirect: /EditarEmpresa";
     }
 
-    @GetMapping("/users/{id}/movements") //Consultar movimientos por id del empleado
-    public ArrayList<MovimientoDinero> movimientosPorEmpleado(@PathVariable("id") Integer id){
-        return movimientosServicios.obtenerPorEmpleado(id);
+    @GetMapping("/EliminarEmpresa/{id}")
+    public String eliminarEmpresa(@PathVariable Integer id, RedirectAttributes redirectAttributes){
+        if (empresaServicios.deleteEmpresa(id)==true){;
+
+            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            return "redirect:/VerEmpresas";
+        }
+        redirectAttributes.addFlashAttribute("mensaje","deleteError");
+        return "redirect:/VerEmpresas";
+    }
+    //ETODO LO RELACIONADO CON EMPLEADOS
+    @GetMapping ("/VerEmpleados")
+    public String viewEmpleados(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<Empleado> listaEmpleados=empleadoServicios.getAllEmpleado();
+        model.addAttribute("emplelist",listaEmpleados);
+        model.addAttribute("mensaje",mensaje);
+        return "verEmpleados"; //Llamamos al HTML
     }
 
-    @GetMapping("/enterprises/{id}/movements") //Consultar movimientos que pertenecen a una empresa por el id de la empresa
-    public ArrayList<MovimientoDinero> movimientosPorEmpresa(@PathVariable("id") Integer id){
-        return movimientosServicios.obtenerPorEmpresa(id);
+    @GetMapping("/AgregarEmpleado")
+    public String nuevoEmpleado(Model model, @ModelAttribute("mensaje") String mensaje){
+        Empleado empleado= new Empleado();
+        model.addAttribute("empleado",empleado);
+        model.addAttribute("mensaje",mensaje);
+        List<Empresa> listaEmpresas= empresaServicios.getAllEmpresas();
+        model.addAttribute("emprelist",listaEmpresas);
+        return "agregarEmpleado"; //Llamar HTML
     }
+
+    @PostMapping("/GuardarEmpleado")
+    public String guardarEmpleado(Empleado empleado, RedirectAttributes redirectAttributes){
+        if(empleadoServicios.saveOrUpdateEmpleado(empleado)==true){
+            redirectAttributes.addFlashAttribute("mensaje","saveOK");
+            return "redirect:/VerEmpleados";
+        }
+        redirectAttributes.addFlashAttribute("mensaje","saveError");
+        return "redirect:/AgregarEmpleado";
+    }
+
+    @GetMapping("/EditarEmpleado/{id}")
+    public String editarEmpleado(Model model, @PathVariable Integer id, @ModelAttribute("mensaje") String mensaje){
+        Empleado empleado=empleadoServicios.getEmpleadoById(id).get();
+        //Creamos un atributo para el modelo, que se llame igualmente empl y es el que ira al html para llenar o alimentar campos
+        model.addAttribute("empleado",empleado);
+        model.addAttribute("mensaje", mensaje);
+        List<Empresa> listaEmpresas= empresaServicios.getAllEmpresas();
+        model.addAttribute("emprelist",listaEmpresas);
+        return "editarEmpleado";
+    }
+
+    @PostMapping("/ActualizarEmpleado")
+    public String updateEmpleado(@ModelAttribute("empleado") Empleado empleado, RedirectAttributes redirectAttributes){
+        Integer id=empleado.getId(); //Sacamos el id del objeto empl
+        if(empleadoServicios.saveOrUpdateEmpleado(empleado)){
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/VerEmpleados";
+        }
+        redirectAttributes.addFlashAttribute("mensaje","updateError");
+        return "redirect:/EditarEmpleado/"+empleado.getId();
+
+    }
+
+    @GetMapping("/EliminarEmpleado/{id}")
+    public String eliminarEmpleado(@PathVariable Integer id, RedirectAttributes redirectAttributes){
+        if (empleadoServicios.deleteEmpleado(id)){
+            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            return "redirect:/VerEmpleados";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+        return "redirect:/VerEmpleados";
+    }
+
+    @GetMapping("/Empresa/{id}/Empleados") //Filtrar los empleados por empresa
+    public String verEmpleadosPorEmpresa(@PathVariable("id") Integer id, Model model){
+        List<Empleado> listaEmpleados = empleadoServicios.obtenerPorEmpresa(id);
+        model.addAttribute("emplelist",listaEmpleados);
+        return "verEmpleados"; //Llamamos al html con el emplelist de los empleados filtrados
+    }
+
+
 
 }
 

@@ -1,14 +1,15 @@
 package com.UdeA.ciclo3.servicios;
 
-import com.UdeA.ciclo3.Modelos.Empleado;
+
 import com.UdeA.ciclo3.Modelos.Empresa;
 import com.UdeA.ciclo3.repo.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class EmpresaServicios {

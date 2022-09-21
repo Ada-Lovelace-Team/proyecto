@@ -23,10 +23,11 @@ public class controller {
     EmpresaServicios empresaServicios;
 
     @GetMapping({"/","/VerEmpresas"})
-    public String viewEmpresas(Model model){
-        List<Empresa> ListaEmpresas=empresaServicios.getAllEmpresas();
-        model.addAttribute("empList",ListaEmpresas);
-        return "VerEmpresas";
+    public String viewEmpresas(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<Empresa> listaEmpresas=empresaServicios.getAllEmpresas();
+        model.addAttribute("emplist",listaEmpresas);
+        model.addAttribute("mensaje",mensaje);
+        return "verEmpresas";
     }
     @GetMapping ("/AgregarEmpresa")
     public String nuevaEmpresa(Model model, @ModelAttribute("mensaje")String mensaje){
@@ -37,7 +38,7 @@ public class controller {
     }
     @PostMapping("/GuardarEmpresa")
     public String guardarEmpresa(Empresa emp, RedirectAttributes redirectAttributes){
-        if (empresaServicios.saveOrUpdateEmpresa(emp)==true){
+        if(empresaServicios.saveOrUpdateEmpresa(emp)==true){
             redirectAttributes.addFlashAttribute("mensaje","saveOK");
             return "redirect:/VerEmpresas";
         }

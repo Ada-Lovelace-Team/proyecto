@@ -18,7 +18,7 @@ public class EmpresaServicios {
     //metodo que me dice todas las empresas que tengo por medio de jpaRepository
     public List<Empresa> getAllEmpresas(){
         List<Empresa> empresaList = new ArrayList<>();
-        empresaRepository.findAll().forEach(empresa->empresaList.add(empresa));
+        empresaRepository.findAll().forEach(empresa -> empresaList.add(empresa));  //Recorremos el iterable que regresa el metodo findAll del Jpa y lo guardamos en la lista creada
         return empresaList;
     }
 

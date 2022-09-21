@@ -9,7 +9,7 @@ public class Empresa {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     private String nombre;
-    private String dirreccion;
+    private String direccion;
     private String telefono;
     private String NIT;
 
@@ -18,7 +18,7 @@ public class Empresa {
 
     public Empresa(String nombre, String dirreccion, String telefono, String NIF) {
         this.nombre = nombre;
-        this.dirreccion = dirreccion;
+        this.direccion = dirreccion;
         this.telefono = telefono;
         this.NIT = NIT;
     }
@@ -39,12 +39,12 @@ public class Empresa {
         this.nombre = nombre;
     }
 
-    public String getDirreccion() {
-        return dirreccion;
+    public String getDireccion() {
+        return direccion;
     }
 
-    public void setDirreccion(String dirreccion) {
-        this.dirreccion = dirreccion;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getTelefono() {

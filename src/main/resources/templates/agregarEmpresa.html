@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Agregar nueva Empresa - Ciclo3</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,57 +15,68 @@
     color: black;
     text-decoration:none;
     }
-
 </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Agrege los datos de la nueva Empresa</h1>
+    <p th:inline="text" class="text-right">User: [[${#httpServletRequest.remoteUser}]]</p>
+    <button type="button" class="btn btn-danger" style="float:right"><a th:href="@{/logout}">Cerrar Sesión</a></button>
+
+
+    <h1> Agregue los datos de la Empresa</h1>
     <br>
+    <br>
+    <!--Crear formulario para llenar los datos de la empresa y guardarlo en el objeto emp -->
     <form th:action="@{/GuardarEmpresa}" th:object="${emp}" method="post">
-        <!--campo nombre empresa-->
+        <!--Campo para nombre-->
         <div class="row">
             <div class="form-group col-md-12">
                 <label class="col-md-3" for="nombre">Nombre de la Empresa:</label>
                 <div class="col-md-6">
-                    <input type="text"th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
+                    <input type="text" th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
             </div>
         </div>
-        <!--campo dirección-->
+        <!--direccion-->
         <div class="row">
             <div class="form-group col-md-12">
-                <label class="col-md-3" for="direccion">Dirección de la Empresa:</label>
+                <label class="col-md-3" for="direccion">Direccion de la Empresa:</label>
                 <div class="col-md-6">
-                    <input type="text"th:field="*{direccion}" class="form-control" id="direccion" required="required"></div>
+                    <input type="text" th:field="*{direccion}" class="form-control" id="direccion" required="required"></div>
             </div>
         </div>
-        <!--campo telefono-->
         <div class="row">
             <div class="form-group col-md-12">
-                <label class="col-md-3" for="telefono">telefono de la Empresa:</label>
+                <label class="col-md-3" for="telefono">Telefono de la Empresa:</label>
                 <div class="col-md-6">
-                    <input type="text"th:field="*{telefono}" class="form-control" id="telefono" required="required"></div>
+                    <input type="text" th:field="*{telefono}" class="form-control" id="telefono" required="required"></div>
             </div>
         </div>
-        <!--campo NIT de la empresa-->
+
+        <!--Campo para NIT-->
         <div class="row">
             <div class="form-group col-md-12">
-                <label class="col-md-3" for="nombre">Nombre de la Empresa:</label>
+                <label class="col-md-3" for="NIT">NIT o RUT de la Empresa:</label>
                 <div class="col-md-6">
-                    <input type="text"th:field="*{nombre}" class="form-control" id="nombre" required="required"></div>
+                    <input type="text" th:field="*{NIT}" class="form-control" id="NIT" required="required"></div>
             </div>
         </div>
-        <!--Boton para enviar y ejecutar la accion -->
+
+
+        <!--Boton para enviar todo y ejecutar accion -->
         <div class="row">
             <div class="col-md-2">
                 <button class="btn btn-success">Crear Empresa</button>
             </div>
         </div>
+
     </form>
+
     <br>
     <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atrás</a>
 
 </div>
 </body>
 </html>
+
 

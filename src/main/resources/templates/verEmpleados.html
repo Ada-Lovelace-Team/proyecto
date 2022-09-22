@@ -31,6 +31,7 @@
     <th>Correo</th>
     <th>Empresa</th>
     <th>Cargo</th>
+    <th>Transacciones</th>
     <th>Editar</th>
     <th>Eliminar</th>
   </tr>
@@ -44,6 +45,9 @@
     <td th:text="${empleado.empresa.nombre}"></td>
     <td th:if="${empleado.cargo=='1'}">Administrativo</td>
     <td th:if="${empleado.cargo=='2'}">Operativo</td>
+
+
+    <td><button type="button" class="btn btn-info"><a th:href="@{/Empleado/{id}/Transacciones(id=${empleado.id})}">Visualizar</a></button></td>
     <td><button type="button" class="btn btn-warning"><a th:href="@{/EditarEmpleado/{id}(id=${empleado.id})}">Editar</a></button></td>
     <td><button type="button" class="btn btn-danger"><a th:href="@{/EliminarEmpleado/{id}(id=${empleado.id})}">Eliminar</a></button></td>
   </tr>

@@ -3,6 +3,7 @@ package com.UdeA.ciclo3.controller;
 
 import com.UdeA.ciclo3.Modelos.Empleado;
 import com.UdeA.ciclo3.Modelos.Empresa;
+import com.UdeA.ciclo3.Modelos.MovimientoDinero;
 import com.UdeA.ciclo3.repo.MovimientosRepository;
 import com.UdeA.ciclo3.servicios.EmpleadoServicios;
 import com.UdeA.ciclo3.servicios.EmpresaServicios;
@@ -29,8 +30,8 @@ public class controller {
     EmpleadoServicios empleadoServicios;
     @Autowired
     MovimientosServicios movimientosServicios;
-    @Autowired
-    MovimientosRepository movimientosRepository;
+
+
 
 
     @GetMapping({"/","/VerEmpresas"})
@@ -71,7 +72,7 @@ public class controller {
             return "redirect:/VerEmpresas";
         }
         redirectAttributes.addFlashAttribute("mensaje","updateError");
-        return "redirect: /EditarEmpresa";
+        return "redirect: /EditarEmpresa/"+emp.getId();
     }
 
     @GetMapping("/EliminarEmpresa/{id}")
@@ -83,7 +84,7 @@ public class controller {
         redirectAttributes.addFlashAttribute("mensaje", "deleteError");
         return "redirect:/VerEmpresas";
     }
-    //ETODO LO RELACIONADO CON EMPLEADOS
+    //METODO LO RELACIONADO CON EMPLEADOS
     @GetMapping ("/VerEmpleados")
     public String viewEmpleados(Model model, @ModelAttribute("mensaje") String mensaje){
         List<Empleado> listaEmpleados=empleadoServicios.getAllEmpleado();
@@ -151,5 +152,80 @@ public class controller {
         model.addAttribute("emplelist",listaEmpleados);
         return "verEmpleados"; //Llamamos al html con el emplelist de los empleados filtrados
     }
-}
 
+    //Movimientos
+    @GetMapping ("/VerMovimientos")
+    public String viewMovimientos(Model model, @ModelAttribute("mensaje") String mensaje){
+        List<MovimientoDinero> listaMovimientos=movimientosServicios.getAllMovimientos();
+        model.addAttribute("movlist",listaMovimientos);
+        model.addAttribute("mensaje",mensaje);
+        return "verMovimientos"; //Llamamos al HTML
+    }
+    //Agrega nuevo movimiento
+    @GetMapping("/AgregarMovimiento")
+    public String nuevoMovimiento(Model model, @ModelAttribute("mensaje") String mensaje){
+        MovimientoDinero movimiento= new MovimientoDinero();
+        model.addAttribute("mov",movimiento);
+        model.addAttribute("mensaje",mensaje);
+        List<Empleado> listaEmpleados= empleadoServicios.getAllEmpleado();
+        model.addAttribute("emplelist",listaEmpleados); //
+        return "agregarMovimiento"; //Llamamos al HTML
+    }
+    @PostMapping("/GuardarMovimiento")
+    public String guardarMovimiento(MovimientoDinero mov, RedirectAttributes redirectAttributes){
+        if(movimientosServicios.saveOrUpdateMovimiento(mov)){
+            redirectAttributes.addFlashAttribute("mensaje","saveOK");
+            return "redirect:/VerMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje","saveError");
+        return "redirect:/AgregarMovimiento";
+    }
+    @GetMapping("/EditarMovimiento/{id}")
+    public String editarMovimiento(Model model, @PathVariable Integer id, @ModelAttribute("mensaje") String mensaje){
+        MovimientoDinero mov=movimientosServicios.getMovimientoById(id);
+        //Creamos un atributo para el modelo, que se llame igualmente empl y es el que ira al html para llenar o alimentar campos
+        model.addAttribute("mov",mov);
+        model.addAttribute("mensaje", mensaje);
+        List<Empleado> listaEmpleados= empleadoServicios.getAllEmpleado();
+        model.addAttribute("emplelist",listaEmpleados);
+        return "editarMovimiento";
+    }
+
+    @PostMapping("/ActualizarMovimiento")
+    public String updateMovimiento(@ModelAttribute("mov") MovimientoDinero mov, RedirectAttributes redirectAttributes){
+        if(movimientosServicios.saveOrUpdateMovimiento(mov)){
+            redirectAttributes.addFlashAttribute("mensaje","updateOK");
+            return "redirect:/VerMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje","updateError");
+        return "redirect:/EditarMovimiento/"+mov.getId();
+
+    }
+    @GetMapping("/EliminarMovimiento/{id}")
+    public String eliminarMovimiento(@PathVariable Integer id, RedirectAttributes redirectAttributes){
+        if (movimientosServicios.deleteMovimiento(id)){
+            redirectAttributes.addFlashAttribute("mensaje","deleteOK");
+            return "redirect:/VerMovimientos";
+        }
+        redirectAttributes.addFlashAttribute("mensaje", "deleteError");
+        return "redirect:/VerMovimientos";
+
+    }
+     // Filtro de movimientos por empleado
+    @GetMapping("/Empleado/{id}/Transacciones")
+    public String movimientosPorEmpleado(@PathVariable("id") Integer id, Model model){
+        List<MovimientoDinero> movlist =movimientosServicios.obtenerPorEmpleado(id);
+        model.addAttribute("movlist",movlist);
+        return "verMovimientos"; //Llamamos al html verMovimientos
+    }
+    // Filtro de movimientos por empleado
+    @GetMapping("/Empresa/{id}/Transacciones")
+    public String movimientosPorEmpresa(@PathVariable("id")Integer id, Model model){
+        List<MovimientoDinero> movlist=movimientosServicios.obtenerPorEmpresa(id);
+        model.addAttribute("movlist",movlist);
+        return "verMovimientos"; //Llamamos al html verMovimientos
+
+    }
+
+
+}

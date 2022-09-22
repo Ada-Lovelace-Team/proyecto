@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Agregar nuevo Movimiento - Ciclo3 </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+   a{
+    color:white;
+    }
+    a:hover {
+    color: black;
+    text-decoration:none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1> Agregue la información del Movimiento</h1>
+  <br>
+   <!--Se crea el formulario para llenar los datos del movimiento y guardarlos en el objeto movimientos-->
+  <form th:action="@{/GuardarMovimiento}" th:object="${mov}" method="post">
+    <!--Campo  crear concepto movimiento-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="concepto">Concepto del Movimiento:</label>
+        <div class="col-md-6">
+          <select th:field="*{concepto}" class="form-control" id="concepto" required="required">
+            <option th:value=1>Gastos de infraestructura</option>
+            <option th:value=2>Gastos de servicios publicos/privados</option>
+            <option th:value=3>Gastos de papelería y oficina</option>
+            <option th:value=4>Mobiliario y maquinaria</option>
+            <option th:value=5>Gastos de marketing y publicidad</option>
+            <option th:value=6>Gastos de servicios profesionales independientes</option>
+            <option th:value=7>Gastos de administración, gestión y legales</option>
+            <option th:value=8>Gastos de diseño web y software</option>
+            <option th:value=9>Gastos de representación </option>
+            <option th:value=10>Gastos de entretenimiento y bienestar</option>
+            <option th:value=11>Gastos viaticos</option>
+            <option th:value=12>Impuestos y tasas </option>
+            <option th:value=13>Beneficios para empleados </option>
+            <option th:value=14>Seguros de la empresa </option>
+            <option th:value=15>Gastos financieros</option>
+            <option th:value=16>Gastos de formación</option>
+
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!--Campo para monto-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="monto">Valor del movimiento:</label>
+        <div class="col-md-6">
+          <input type="number" th:field="*{monto}" class="form-control" id="monto" required="required"></div>
+      </div>
+    </div>
+
+    <!--Campo empleado(empleado responsable del movimiento)-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="usuario">Empleado responsable:</label>
+        <div class="col-md-6">
+          <select th:field="*{usuario}" class="form-control" id="usuario" required="required" readonly>
+            <option th:each="empleado : ${emplelist}" th:text="${empleado.nombre}" th:value="${empleado.id}"></option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!--Boton para enviar tod -->
+    <div class="row">
+      <div class="col-md-2">
+        <button class="btn btn-success">Registrar movimiento</button>
+      </div>
+    </div>
+
+  </form>
+
+  <br>
+  <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atrás</a>
+
+</div>
+</body>
+</html>

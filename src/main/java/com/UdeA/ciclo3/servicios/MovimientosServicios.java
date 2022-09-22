@@ -19,6 +19,7 @@ public class MovimientosServicios {
     }
 
     public MovimientoDinero getMovimientoById(Integer id){ //Ver movimientos por id
+
         return movimientosRepository.findById(id).get();
     }
 

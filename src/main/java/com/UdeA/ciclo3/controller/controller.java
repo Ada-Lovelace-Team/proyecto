@@ -9,13 +9,12 @@ import com.UdeA.ciclo3.servicios.EmpleadoServicios;
 import com.UdeA.ciclo3.servicios.EmpresaServicios;
 import com.UdeA.ciclo3.servicios.MovimientosServicios;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -30,6 +29,8 @@ public class controller {
     EmpleadoServicios empleadoServicios;
     @Autowired
     MovimientosServicios movimientosServicios;
+    @Autowired
+    MovimientosRepository movimientosRepository;
 
 
 
@@ -155,10 +156,16 @@ public class controller {
 
     //Movimientos
     @GetMapping ("/VerMovimientos")
-    public String viewMovimientos(Model model, @ModelAttribute("mensaje") String mensaje){
-        List<MovimientoDinero> listaMovimientos=movimientosServicios.getAllMovimientos();
-        model.addAttribute("movlist",listaMovimientos);
+    public String viewMovimientosviewMovimientos(@RequestParam(value="pagina", required=false, defaultValue = "1") int NumeroPagina,
+                                                 @RequestParam(value="medida", required=false, defaultValue = "20") int medida,
+                                                 Model model, @ModelAttribute("mensaje") String mensaje){
+        Page<MovimientoDinero> paginaMovimientos= movimientosRepository.findAll(PageRequest.of(NumeroPagina,medida));
+        model.addAttribute("movlist",paginaMovimientos.getContent());
+        model.addAttribute("paginas",new int[paginaMovimientos.getTotalPages()]);
+        model.addAttribute("paginaActual", NumeroPagina);
         model.addAttribute("mensaje",mensaje);
+        Long sumaMonto=movimientosServicios.obtenerSumaMontos();
+        model.addAttribute("SumaMontos",sumaMonto);//Mandamos la suma de todos los montos a la plantilla
         return "verMovimientos"; //Llamamos al HTML
     }
     //Agrega nuevo movimiento
@@ -216,6 +223,8 @@ public class controller {
     public String movimientosPorEmpleado(@PathVariable("id") Integer id, Model model){
         List<MovimientoDinero> movlist =movimientosServicios.obtenerPorEmpleado(id);
         model.addAttribute("movlist",movlist);
+        Long sumaMonto=movimientosServicios.MontosPorEmpleado(id);
+        model.addAttribute("SumaMontos",sumaMonto);// Enviamos la información a la plantilla del html
         return "verMovimientos"; //Llamamos al html verMovimientos
     }
     // Filtro de movimientos por empleado
@@ -223,6 +232,8 @@ public class controller {
     public String movimientosPorEmpresa(@PathVariable("id")Integer id, Model model){
         List<MovimientoDinero> movlist=movimientosServicios.obtenerPorEmpresa(id);
         model.addAttribute("movlist",movlist);
+        Long sumaMonto=movimientosServicios.MontosPorEmpresa(id);
+        model.addAttribute("SumaMontos",sumaMonto);// Enviamos la información a la plantilla del html
         return "verMovimientos"; //Llamamos al html verMovimientos
 
     }

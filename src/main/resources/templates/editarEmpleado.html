@@ -23,6 +23,8 @@
 
 
 <div class="container">
+    <button type="button" class="btn btn-danger" style="float:right"><a th:href="@{/logout}">Cerrar Sesión</a></button>
+
     <h1>Actualice los datos del Empleado</h1>
     <br>
     <form th:action="@{/ActualizarEmpleado}" th:object="${empleado}" method="post">
@@ -72,8 +74,39 @@
                 <label class="col-md-3" for="cargo">Cargo del empleado:</label>
                 <div class="col-md-6">
                     <select th:field="*{cargo}" class="form-control" id="cargo" required="required">
-                        <option th:value=1>Administrativo</option>
-                        <option th:value=2>Operativo</option>
+                        <option th:value='ROLE_ADMIN'>Administrativo</option>
+                        <option th:value='ROLE_USER'>Operativo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--cedula-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="cedula">Cedula del empleado:</label>
+                <div class="col-md-6">
+                    <input type="text" th:field="*{cedula}" class="form-control" id="cedula" required="required"></div>
+            </div>
+        </div>
+
+        <!--password-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="password">contraseña del empleado:</label>
+                <div class="col-md-6">
+                    <input type="text" th:field="*{password}" class="form-control" id="password" required="required"></div>
+            </div>
+        </div>
+
+        <!--Campo para estado-->
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="col-md-3" for="cargo">Estado del empleado:</label>
+                <div class="col-md-6">
+                    <select th:field="*{estado}" class="form-control" id="estado" required="required">
+                        <option th:value=1>Activo</option>
+                        <option th:value=0>Inactivo</option>
                     </select>
                 </div>
             </div>
@@ -92,6 +125,10 @@
     <br>
     <a href="javascript: history.go(-1)" class="btn btn-info" role="button">Atrás</a>
 
-</div>
+</div><!--script para ocultar la contraseña-->
+<script th:inline="javascript">
+  window.onload=function(){
+  document.getElementById("password").type="password"}
+</script>
 </body>
 </html>

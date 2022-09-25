@@ -9,10 +9,12 @@ import com.UdeA.ciclo3.servicios.EmpleadoServicios;
 import com.UdeA.ciclo3.servicios.EmpresaServicios;
 import com.UdeA.ciclo3.servicios.MovimientosServicios;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageRequest;;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -31,8 +33,6 @@ public class controller {
     MovimientosServicios movimientosServicios;
     @Autowired
     MovimientosRepository movimientosRepository;
-
-
 
 
     @GetMapping({"/","/VerEmpresas"})
@@ -106,6 +106,8 @@ public class controller {
 
     @PostMapping("/GuardarEmpleado")
     public String guardarEmpleado(Empleado empleado, RedirectAttributes redirectAttributes){
+        String passEncriptada=passwordEncoder().encode(empleado.getPassword());
+        empleado.setPassword(passEncriptada);
         if(empleadoServicios.saveOrUpdateEmpleado(empleado)==true){
             redirectAttributes.addFlashAttribute("mensaje","saveOK");
             return "redirect:/VerEmpleados";
@@ -113,6 +115,7 @@ public class controller {
         redirectAttributes.addFlashAttribute("mensaje","saveError");
         return "redirect:/AgregarEmpleado";
     }
+
 
     @GetMapping("/EditarEmpleado/{id}")
     public String editarEmpleado(Model model, @PathVariable Integer id, @ModelAttribute("mensaje") String mensaje){
@@ -127,7 +130,12 @@ public class controller {
 
     @PostMapping("/ActualizarEmpleado")
     public String updateEmpleado(@ModelAttribute("empleado") Empleado empleado, RedirectAttributes redirectAttributes){
-        Integer id=empleado.getId(); //Sacamos el id del objeto empl
+        Integer id=empleado.getId(); //Sacamos el id del objeto empleado
+        String Oldpass=empleadoServicios.getEmpleadoById(id).get().getPassword(); //Con ese id consultamos la contraseña que ya esta en la base
+        if(!empleado.getPassword().equals(Oldpass)){
+            String passEncriptada=passwordEncoder().encode(empleado.getPassword());
+            empleado.setPassword(passEncriptada);
+        }
         if(empleadoServicios.saveOrUpdateEmpleado(empleado)){
             redirectAttributes.addFlashAttribute("mensaje","updateOK");
             return "redirect:/VerEmpleados";
@@ -136,6 +144,7 @@ public class controller {
         return "redirect:/EditarEmpleado/"+empleado.getId();
 
     }
+
 
     @GetMapping("/EliminarEmpleado/{id}")
     public String eliminarEmpleado(@PathVariable Integer id, RedirectAttributes redirectAttributes){
@@ -235,8 +244,15 @@ public class controller {
         Long sumaMonto=movimientosServicios.MontosPorEmpresa(id);
         model.addAttribute("SumaMontos",sumaMonto);// Enviamos la información a la plantilla del html
         return "verMovimientos"; //Llamamos al html verMovimientos
-
     }
-
+        @Bean
+          public PasswordEncoder passwordEncoder(){
+            return new BCryptPasswordEncoder();
 
 }
+}
+
+
+
+
+

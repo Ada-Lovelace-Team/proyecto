@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Agregar nuevo Empleado - Ciclo3 </title>
+  <title>Agregar nuevo Empleado - Mentis </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -20,6 +20,7 @@
 <body>
 
 <div class="container">
+  <button type="button" class="btn btn-danger" style="float:right"><a th:href="@{/logout}">Cerrar Sesión</a></button>
   <h1> Agregue los datos del Empleado</h1>
   <br>
 
@@ -60,12 +61,45 @@
         <label class="col-md-3" for="cargo">Cargo del empleado:</label>
         <div class="col-md-6">
           <select th:field="*{cargo}" class="form-control" id="cargo" required="required">
-            <option th:value=1>Administrativo</option>
-            <option th:value=2>Operativo</option>
+            <option th:value='ROLE_ADMIN'>Administrativo</option>
+            <option th:value='ROLE_USER'>Operativo</option>
           </select>
         </div>
       </div>
     </div>
+
+    <!--Campo para cedula-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="cedula">Cedula del empleado:</label>
+        <div class="col-md-6">
+          <input type="text" th:field="*{cedula}" class="form-control" id="cedula" required="required"></div>
+      </div>
+    </div>
+
+    <!--Campo para contraseña-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="password">Contraseña del empleado:</label>
+        <div class="col-md-6">
+          <input type="password" th:field="*{password}" class="form-control" id="password" required="required"></div>
+      </div>
+    </div>
+
+
+    <!--Campo para Estado-->
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-3" for="estado">Estado actual del empleado:</label>
+        <div class="col-md-6">
+          <select th:field="*{estado}" class="form-control" id="estado" required="required">
+            <option th:value=1>Activo</option>
+            <option th:value=0>Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
 
 
     <!--Boton para enviar tod -->
